@@ -31,11 +31,19 @@ public class BookController {
         model.addAttribute("books",bookDAO.index());
         return "books/index";
     }
+
+
+
     @GetMapping("/{id}")
-    public String show(@PathVariable("id") int id, Model model) {
+    public String show(@PathVariable("id") int id, Model model, @ModelAttribute("person") Person person) {
         //Получим книгу из DAO по id и передадим в представление
         model.addAttribute("book", bookDAO.show(id));
         model.addAttribute("people",personDAO.index());
+        if (bookDAO.show(id).getPerson_id() == null) {
+            //Передадим список людей в отображение для выпадающего списка
+
+            System.out.println(id);
+        }
         return "books/show";
     }
 
@@ -57,20 +65,25 @@ public class BookController {
     @GetMapping("/{id}/edit")
     public String edit(@PathVariable("id") int id, Model model) {
         model.addAttribute("book", bookDAO.show(id));
-
         return "books/edit";
     }
     @PatchMapping("/{id}")
     public String update(@ModelAttribute("book") Book book,
-						 @ModelAttribute("person") Person person,
-                         @PathVariable("id") int id) {
+						 @PathVariable("id") int id, @ModelAttribute("person") Person person) {
 //        if (bindingResult.hasErrors()) return "people/edit";
 		if (person != null) {
-			bookDAO.assign(id, person);
-			return "redirect:/books/{id}";
-		}
+            System.out.println(id);
+            bookDAO.assign(id, person);
+            return "redirect:/books/{id}";
+        }
         bookDAO.update(id, book);
         return "redirect:/books";
+    }
+
+    @PostMapping("/{id}")
+    public  String release(@ModelAttribute("book") Book book, @PathVariable("id") int id) {
+        bookDAO.release(id);
+        return "redirect:/books/{id}";
     }
 
    /* @GetMapping("/{id}")

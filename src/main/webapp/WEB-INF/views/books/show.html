@@ -12,13 +12,26 @@
     <span th:if="${book.getPerson_id() == null}">The Book is free. Who do you assign this book to?</span>
 </div>
 
-<form th:if="${book.getPerson_id() == null}" th:method="PATCH" th:action="@{/books/{id}(id=${book.getBook_id()})}" th:object="${book}">
+<!--<form th:method="PATCH" th:action="@{/admin/add}">
+    <label for="person">Choose people:</label>
+    <select th:object="${person}" th:field="*{person_id}" id="person">
+        <option th:each="person : ${people}" th:value="${person.getPerson_id()}" th:text="${person.getName()}"> </option>
+    </select>
+    <input type="submit" value="choose" />
+</form>-->
+
+<form th:if="${book.getPerson_id() == null}" th:method="PATCH" th:action="@{/books/{id}(id=${book.getBook_id()})}">
     <label for="person">Choose people:</label>
     <select th:object="${person}" th:field="*{person_id}" id="person">
         <option th:each="person : ${people}" th:value="${person.getPerson_id()}" th:text="${person.getName()}"> </option>
     </select>
 
     <input type="submit" value="choose" />
+</form>
+
+<form th:if="${book.getPerson_id() != null}" th:method="POST"
+      th:action="@{/books/{id}(id=${book.getBook_id()})}" th:object="${book}">
+    <input type = "submit" value="Release"/>
 </form>
 
 <!--<a th:href="@{/books/{id}/edit(id = ${book.getBook_id()})}">Edit</a>-->
